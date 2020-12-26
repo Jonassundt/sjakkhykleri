@@ -1,2 +1,4 @@
 # sjakkhykleri
 Sjakkspill
+
+Second commit.
