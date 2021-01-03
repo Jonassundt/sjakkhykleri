@@ -4,7 +4,7 @@
 class Bishop():
     """ id, color, name, board"""
 
-    def __init__(self, id, board, color, pos, name='b'):
+    def __init__(self, id, board, color, pos, name='♝'):
         self.id = id
         self.name = name #This shows on the board
         self.board = board
@@ -76,8 +76,4 @@ class Bishop():
                 moves.append(self.pos + tmpPos)
             elif(tmpPiece.color == self.color):
                 break
-        
-        #TODO: Add validity-check for if player is in check. Do this by trying to make each move, and checking if playerColor is in check,
-        # If the player is in check, then dont add it to the moves. If it is not in check, then add that to the valid moves.
-        # Do this by accessing the Game-class.
         return moves

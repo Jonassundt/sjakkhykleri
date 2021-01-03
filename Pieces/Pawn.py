@@ -4,7 +4,7 @@
 class Pawn():
     """ id, color, name, board"""
 
-    def __init__(self, id, board, color, pos, name='b'):
+    def __init__(self, id, board, color, pos, name='♟'):
         self.id = id
         self.name = name #This shows on the board
         self.board = board
@@ -71,8 +71,8 @@ class Pawn():
         #if pos is inside of the board
         elif(tmpPiece == 'o'): #open square ahead
             moves.append(self.pos + tmpPos)
-            #if it is at startposition, check 2 up. This will only be checked if 1 up is a clear square.
-            if(y == 1):
+            #if it is at startposition, check 2 up. This will only be checked if 1 down is a clear square.
+            if(y == 6):
                 tmpPos = str(x) + str(y - 2)
                 tmpPiece = self.board.getPiece(tmpPos)
                 if(tmpPiece == None): #it will never reach this. TODO: Can remove this.

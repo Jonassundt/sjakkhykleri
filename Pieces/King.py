@@ -2,7 +2,7 @@
 
 
 class King():
-    def __init__(self, id, board, color, pos, name='K'):
+    def __init__(self, id, board, color, pos, name='♚'):
         self.id = id
         self.name = name #This shows on the board
         self.board = board

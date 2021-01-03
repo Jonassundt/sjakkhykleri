@@ -4,7 +4,8 @@ from Pieces.Rook import Rook
 from Pieces.King import King
 from Pieces.Bishop import Bishop
 from Pieces.Queen import Queen
-
+from Pieces.Pawn import Pawn
+from Pieces.Knight import Knight
 
 """Chess-game"""
 
@@ -12,8 +13,6 @@ class ChessGame():
 
     def __init__(self, board):
         self.board = board
-        # self.kingPosBlack = '67' #sample positions
-        # self.kingPosWhite = '40'
 
     def runGame(self): #create this method later.
         pass
@@ -26,11 +25,25 @@ class ChessGame():
         startPos = move[0:2]
         endPos = move[2:4]
         startPiece = self.board.getPiece(startPos)
-        # endPiece = self.board.getPiece(endPos)
 
-        self.board.setPiece(startPiece, endPos)
-        self.board.setPiece('o', startPos)
-        pass
+        #Pawn will transform to a queen if it reaches the end of the board
+        if(isinstance(startPiece, Pawn)):
+            if(startPiece.color == 'white' and startPos[1:2] == '6'):
+                #transform to a queen
+                newQueen = Queen(123, self.board, 'white', endPos)
+                self.board.setPiece(newQueen, endPos)
+                self.board.setPiece('o', startPos)
+            elif(startPiece.color == 'black' and startPos[1:2] == '1'):
+                #do same as above, just for black queen
+                newQueen = Queen(321, self.board, 'black', endPos)
+                self.board.setPiece(newQueen, endPos)
+                self.board.setPiece('o', startPos)
+            else:
+                self.board.setPiece(startPiece, endPos)
+                self.board.setPiece('o', startPos)
+        else:
+            self.board.setPiece(startPiece, endPos)
+            self.board.setPiece('o', startPos)
 
     def getPlayerMoves(self, playerColor, checkSelfCheck=1):
         #returns all possible moves on the board [XXXX, XXXY, XXXZ, ...]
@@ -56,19 +69,19 @@ class ChessGame():
         #     elif(playerColor == 'black'):
         #         opposite = 'white'
 
-        #doing the self check, because obviously cannot make move where its putting itself in check.
+        #doing the self check, because obviously player cannot make move where its putting itself in check.
         for move in playerMoves:
-            # print(move)
             startPos = move[0:2]
             endPos = move[2:4]
             startPiece = self.board.getPiece(startPos)
             endPiece = self.board.getPiece(endPos)
-            #making the move
-            self.board.setPiece(startPiece, endPos)
-            self.board.setPiece('o', startPos)
-            ###-----------------------------------###
-            # self.board.setPiece(endPiece, '9999') #trying this
 
+            #making the move
+            self.makeMove(move)
+            # self.board.setPiece(startPiece, endPos)
+            # self.board.setPiece('o', startPos)
+
+            ###-----------------------------------###
             #looks through all opponents moves to see if itself is in check.
             
             if(self.isPlayerCheck(playerColor) == False): #see if playerColor is in check
@@ -103,7 +116,7 @@ class ChessGame():
 
     def isCheckMate(self, playerColor):
         #if player has no moves left and it is his turn, then he is checkmate.
-        if len(self.getPlayerMoves(playerColor) == 0):
+        if (len(self.getPlayerMoves(playerColor)) == 0):
             return True
         return False
 
@@ -172,62 +185,48 @@ class Board():
 myBoard = Board()
 
 #create pieces
-# w_rook_1 = Rook(1, myBoard, 'white', '70') #create a rook
-w_rook_2 = Rook(2, myBoard, 'white', '70') #create a rook
-w_king = King(3, myBoard, 'white', '40') #create a king
+w_rook_1 = Rook(1, myBoard, 'white', '11') #create a rook
+# w_rook_2 = Rook(2, myBoard, 'white', '70') #create a rook
+w_king = King(3, myBoard, 'white', '24') #create a king
 # w_bishop_1 = Bishop(4, myBoard, 'white', '20')
 # w_bishop_2 = Bishop(5, myBoard, 'white', '50')
 # w_queen = Queen(6, myBoard, 'white', '30')
+# w_pawn_1 = Pawn(1335, myBoard, 'white', '61')
 
-b_rook_1 = Rook(20, myBoard, 'black', '76')
-b_king = King(21, myBoard, 'black', '77')
+# b_rook_1 = Rook(20, myBoard, 'black', '01')
+b_king = King(21, myBoard, 'black', '71')
+b_pawn_1 = Pawn(234, myBoard, 'black', '61')
 
 #add them to the board
 # myBoard.addPiece(w_rook_1) #add piece to board
-myBoard.addPiece(w_rook_2)
+# myBoard.addPiece(w_rook_2)
 myBoard.addPiece(w_king)
+myBoard.addPiece(w_rook_1)
 # myBoard.addPiece(w_bishop_1)
 # myBoard.addPiece(w_bishop_2)
 # myBoard.addPiece(w_queen)
-myBoard.addPiece(b_rook_1)
 myBoard.addPiece(b_king)
+myBoard.addPiece(b_pawn_1)
+# myBoard.addPiece(b_pawn_1)
 
 
-print(myBoard.toString())   #for å displaye brettet
+
 
 
 
 ###-------GAME STARTS-------###
 myGame = ChessGame(myBoard)
+# myGame.runGame() should run the game
 
-#blacks turn
-moves = myGame.getPlayerMoves('black')
-print(moves)
-#black moves king one to the left
-myGame.makeMove('7767')
-#display the board
-print(myBoard.toString())
 
-#white's turn
-#white moves rook to say check on king
-myGame.makeMove('7060')
-print(myBoard.toString())
-
-# #black's turn, is now in check by the rook on G1 (60)
-moves = myGame.getPlayerMoves('black')
-print(moves)
-myGame.makeMove('6777')
-
-#whites turn
-moves = myGame.getPlayerMoves('white')
-print(moves)
-print(myBoard.toString())
-myGame.makeMove('6067')
-
-#blacks turn, is now in check
-print(myBoard.toString())
+#whoever to move
 moves = myGame.getPlayerMoves('black')
 print(moves)
 
-myGame.makeMove('7767')
-print(myBoard.toString())
+
+
+
+
+
+print(myBoard.toString())   #for å displaye brettet
+print("\n")
